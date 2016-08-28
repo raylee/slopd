@@ -1,0 +1,7 @@
+#!/bin/bash
+URL="http://pdreport.slocity.org/policelog/rpcdsum.txt"
+mkdir -p ~/police-log/
+d=$(date +"%Y-%m-%d-%H")
+target=~/police-log/$d
+curl 2>/dev/null "$URL" -o "$target"
+
