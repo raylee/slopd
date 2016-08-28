@@ -72,6 +72,7 @@ func parse_report(in io.Reader) <-chan entry {
 		in_entry_header := false
 
 		header_pattern := regexp.MustCompile(`[/0-9]{5,8}               San Luis Obispo Police Department`)
+
 	parse_line:
 		for s.Scan() {
 			line := s.Text()
@@ -141,15 +142,15 @@ func time_from(day, tm string) time.Time {
 	return t
 }
 
-// test the regexp parser via https://play.golang.org/p/C2GkVfl-tO
+// test the regexp parser via https://play.golang.org/p/mJSLTs2NBB
 const pattern = `([0-9]*) (........) Received:(.....) Dispatched:(.....) Arrived:(.....) Cleared:(.*)
 (?s:\s*)Type:(.*)Location:(.*)
 As Observed:((?s).*)
-Addr:(.*)Clearance Code:((?s).*)
+Addr:((?s).*)Clearance Code:((?s).*)
 Responsible Officer:(.*)
 Units:(.*)
  Des:((?s).*)
-CALL COMMENTS:((?s).*)`
+(CALL COMMENTS:|TO VEHS)((?s).*)`
 
 func (e *entry) parse_raw() {
 	pat := regexp.MustCompile(pattern)
