@@ -1,6 +1,9 @@
 // parser for SLOPD police log format (and other cities)
 package main
 
+// todo: some strings have embedded newlines, remove them
+// todo: insert entries into a database, let someone else run stats
+
 /*
 There was a question at the meeting about whether there's a public
 police log. There is, here:
@@ -87,6 +90,7 @@ func parse_report(in io.Reader) <-chan entry {
 			}
 
 			if is_separator(line) {
+				// do we have a full entry to emit?
 				switch in_entry_header {
 				case true:
 					if len(e.raw) > 0 {
@@ -100,6 +104,7 @@ func parse_report(in io.Reader) <-chan entry {
 			}
 			e.append_line(line)
 
+			// used during testing, `cat logs/* | go run parser.go | less`
 			if is_end(line) {
 				for s.Scan() {
 					line := s.Text()
@@ -111,14 +116,6 @@ func parse_report(in io.Reader) <-chan entry {
 		}
 
 		close(ec)
-
-		// Check for errors during `Scan`. End of file is
-		// expected and not reported by `Scan` as an error.
-
-		// if err := scanner.Err(); err != nil {
-		// 	fmt.Fprintln(os.Stderr, "error:", err)
-		// 	os.Exit(1)
-		// }
 	}()
 
 	return ec
@@ -187,6 +184,7 @@ func (e *entry) parse_raw() {
 	}
 }
 
+// format an entry as a human readable record
 func (e entry) String() string {
 	return fmt.Sprintf(`
 id             %v
