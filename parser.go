@@ -147,7 +147,7 @@ Addr:((?s).*)Clearance Code:((?s).*)
 Responsible Officer:(.*)
 Units:(.*)
  Des:((?s).*)
-(CALL COMMENTS:|TO VEHS)((?s).*)`
+(?:CALL COMMENTS:|TO VEHS)((?s).*)`
 
 func (e *entry) parse_raw() {
 	pat := regexp.MustCompile(pattern)
